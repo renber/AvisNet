@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avis.Common", "Avis.Common\Avis.Common.csproj", "{C053511D-F6C6-4CBB-A903-7D1FE514E108}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avis.Common.Tests", "Avis.Common.Tests\Avis.Common.Tests.csproj", "{7CF967B9-3E01-45F7-8005-1B07042E63DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avis.Client", "Avis.Client\Avis.Client.csproj", "{B270FABE-62DF-4E8F-ABE9-342A41080FE7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C053511D-F6C6-4CBB-A903-7D1FE514E108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C053511D-F6C6-4CBB-A903-7D1FE514E108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C053511D-F6C6-4CBB-A903-7D1FE514E108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C053511D-F6C6-4CBB-A903-7D1FE514E108}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CF967B9-3E01-45F7-8005-1B07042E63DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CF967B9-3E01-45F7-8005-1B07042E63DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CF967B9-3E01-45F7-8005-1B07042E63DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CF967B9-3E01-45F7-8005-1B07042E63DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B270FABE-62DF-4E8F-ABE9-342A41080FE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B270FABE-62DF-4E8F-ABE9-342A41080FE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B270FABE-62DF-4E8F-ABE9-342A41080FE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B270FABE-62DF-4E8F-ABE9-342A41080FE7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
