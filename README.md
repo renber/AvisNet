@@ -4,12 +4,10 @@ AvisNet
 .Net (C#) Port of the Java Avis high-performance event router (see http://avis.sourceforge.net/index.html, description taken from there)
 
 
-About
-=====
+## About
 Avis is a high-performance event router. It provides a fast publish/subscribe event routing service compatible with the commercial Elvin implementation developed by Mantara Software.
 
-Features
-========
+## Features
 * Fast broadcast message delivery. No requirement to support transactions or persistence, plus concise message selection allows near real-time delivery.
 * Flexible message format. Messages are just name-value pairs.
 * Content-based subscription. Select messages using subscription expressions like From == 'logger' && Severity > 3 or (string (Message) && Timeout > 0) || regex (Message, 'News:.*').
