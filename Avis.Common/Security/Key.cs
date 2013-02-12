@@ -28,45 +28,52 @@ namespace Avis.Security
  * equals () and hashCode ().
  * 
  */
+    
+    /// <summary>
+    /// A key value used to secure notifications. A key is simply an
+    /// immutable block of bytes.
+    /// </summary>
     public sealed class Key
     {
-        /**
-         * The key's data block.
-         */
-        public readonly byte[] data;
+        /// <summary>
+        /// The key's data block.
+        /// </summary>
+        public readonly byte[] Data;
 
         private int hash;
 
-        /**
-         * Create a key from a password by using the password's UTF-8
-         * representation as the data block.
-         */
+        /// <summary>
+        /// Create a key from a password by using the password's UTF-8
+        /// representation as the data block.
+        /// </summary>
+        /// <param name="password"></param>
         public Key(String password)
-            : this(XdrCoding.toUTF8(password))
+            : this(XdrCoding.ToUTF8(password))
         {
 
         }
 
-        /**
-         * Create a key from a block of data.
-         */
+        /// <summary>
+        /// Create a key from a block of data.
+        /// </summary>
+        /// <param name="data"></param>
         public Key(byte[] data)
         {
             if (data == null || data.Length == 0)
                 throw new ArgumentException("Key data cannot be empty");
 
-            this.data = data;
+            this.Data = data;
             this.hash = new ArrayEqualityComparer<byte>().GetHashCode(data);
         }
 
-        /**
-         * Shortcut to generate the public (prime) key for a given scheme.
-         * 
-         * @see KeyScheme#publicKeyFor(Key)
-         */
-        public Key publicKeyFor(KeyScheme scheme)
+        /// <summary>
+        /// Shortcut to generate the public (prime) key for a given scheme.
+        /// </summary>
+        /// <param name="scheme"></param>
+        /// <returns></returns>
+        public Key PublicKeyFor(KeyScheme scheme)
         {
-            return scheme.publicKeyFor(this);
+            return scheme.PublicKeyFor(this);
         }
 
         public override bool Equals(Object o)
@@ -76,7 +83,7 @@ namespace Avis.Security
 
         public bool Equals(Key key)
         {
-            return hash == key.hash && new ArrayEqualityComparer<byte>().Equals(data, key.data);
+            return hash == key.hash && new ArrayEqualityComparer<byte>().Equals(Data, key.Data);
         }
 
         public override int GetHashCode()

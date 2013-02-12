@@ -11,22 +11,22 @@ namespace Avis.Security.Special
    /// </summary>
     public class Delta
     {
-        public static Delta EMPTY_DELTA = new Delta(Keys.EMPTY_KEYS, Keys.EMPTY_KEYS);
+        public static Delta EMPTY_DELTA = new Delta(Keys.EmptyKeys, Keys.EmptyKeys);
 
-        public readonly Keys added;
-        public readonly Keys removed;
+        public readonly Keys Added;
+        public readonly Keys Removed;
 
         public Delta(Keys added, Keys removed)
         {
-            this.added = added;
-            this.removed = removed;
+            this.Added = added;
+            this.Removed = removed;
         }
 
         public bool IsEmpty
         {
             get
             {
-                return added.IsEmpty && removed.IsEmpty;
+                return Added.IsEmpty && Removed.IsEmpty;
             }
         }
     }

@@ -32,7 +32,7 @@ namespace Avis.IO.Messages
         }
 
         public SubAddRqst(String subExpr)
-            : this(subExpr, Keys.EMPTY_KEYS, true)
+            : this(subExpr, Keys.EmptyKeys, true)
         {
 
         }
@@ -51,7 +51,7 @@ namespace Avis.IO.Messages
 
             XdrCoding.putString(outStream, subscriptionExpr);
             XdrCoding.putBool(outStream, acceptInsecure);
-            keys.encode(outStream);
+            keys.Encode(outStream);
         }
 
         public override void Decode(Stream inStream)
@@ -60,7 +60,7 @@ namespace Avis.IO.Messages
 
             subscriptionExpr = XdrCoding.getString(inStream);
             acceptInsecure = XdrCoding.getBool(inStream);
-            keys = Keys.decode(inStream);
+            keys = Keys.Decode(inStream);
         }
     }
 }

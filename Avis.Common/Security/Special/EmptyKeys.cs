@@ -8,7 +8,7 @@ namespace Avis.Security.Special
 {
     class EmptyKeys : Keys
   {   
-    public override void add (Keys keys)
+    public override void Add (Keys keys)
     {
       throw new NotSupportedException ();
     }
@@ -18,22 +18,22 @@ namespace Avis.Security.Special
         throw new NotSupportedException();
     }
 
-    public override void add (SingleKeyScheme scheme, Key key)
+    public override void Add (SingleKeyScheme scheme, Key key)
     {
         throw new NotSupportedException();
     }
 
-    public override void remove (SingleKeyScheme scheme, Key key)
+    public override void Remove (SingleKeyScheme scheme, Key key)
     {
         throw new NotSupportedException();
     }
 
-    public override void add (DualKeyScheme scheme, DualKeyScheme.Subset subset, Key key)
+    public override void Add (DualKeyScheme scheme, DualKeyScheme.Subset subset, Key key)
     {
         throw new NotSupportedException();
     }
 
-    public override void remove(DualKeyScheme scheme, DualKeyScheme.Subset subset, Key key)
+    public override void Remove(DualKeyScheme scheme, DualKeyScheme.Subset subset, Key key)
     {
         throw new NotSupportedException();
     }

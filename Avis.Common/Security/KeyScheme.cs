@@ -56,75 +56,92 @@ namespace Avis.Security
     * available: {@link #SHA1_CONSUMER SHA1-Consumer},
     * {@link #SHA1_PRODUCER SHA1-Producer} and
     * {@link #SHA1_DUAL SHA1-Dual}.*/
+
+    /// <summary>
+    /// An enumeration of supported Elvin security schemes. A key scheme
+    /// defines a mode of sending or receiving notifications securely.
+    /// </summary>
     public abstract class KeyScheme
     {
-        /**
-   * The SHA-1 Dual key scheme.
-   */
-        public static readonly DualKeyScheme SHA1_DUAL = new DualKeyScheme(1, SecureHash.SHA1);
+        /// <summary>
+        /// The SHA-1 Dual key scheme.
+        /// </summary>
+        public static readonly DualKeyScheme Sha1Dual = new DualKeyScheme(1, SecureHash.SHA1);
 
-        /**
-         * The SHA-1 Producer key scheme.
-         */
-        public static readonly SingleKeyScheme SHA1_PRODUCER = new SingleKeyScheme(2, SecureHash.SHA1, true, false);
+        /// <summary>
+        /// The SHA-1 Producer key scheme.
+        /// </summary>
+        public static readonly SingleKeyScheme Sha1Producer = new SingleKeyScheme(2, SecureHash.SHA1, true, false);
 
-        /**
-         * The SHA-1 Consumer key scheme.
-         */
-        public static readonly SingleKeyScheme SHA1_CONSUMER = new SingleKeyScheme(3, SecureHash.SHA1, false, true);
+        /// <summary>
+        /// The SHA-1 Consumer key scheme.
+        /// </summary>
+        public static readonly SingleKeyScheme Sha1Consumer = new SingleKeyScheme(3, SecureHash.SHA1, false, true);
 
-        private static readonly ISet<KeyScheme> SCHEMES = new HashSet<KeyScheme>() { SHA1_CONSUMER, SHA1_PRODUCER, SHA1_DUAL };
+        private static readonly ISet<KeyScheme> _schemes = new HashSet<KeyScheme>() { Sha1Consumer, Sha1Producer, Sha1Dual };
 
-        /**
-         * The unique ID of the scheme. This is the same as the on-the-wire
-         * ID used by Elvin.
-         */
-        public readonly int id;
+        /// <summary>
+        /// The unique ID of the scheme. This is the same as the on-the-wire
+        /// ID used by Elvin.
+        /// </summary>
+        public readonly int Id;
 
-        /**
-         * True if this scheme is a producer scheme.
-         */
-        public readonly bool producer;
+        /// <summary>
+        /// True if this scheme is a producer scheme.
+        /// </summary>
+        public readonly bool Producer;
 
-        /**
-         * True of this scheme is a consumer scheme.
-         */
-        public readonly bool consumer;
+        /// <summary>
+        /// True of this scheme is a consumer scheme.
+        /// </summary>
+        public readonly bool Consumer;
 
-        /**
-         * The secure hash used in this scheme.
-         */
-        public SecureHash keyHash;
+        /// <summary>
+        /// The secure hash used in this scheme.
+        /// </summary>
+        public SecureHash KeyHash;
 
-        /**
-         * The unique, human-readable name of this scheme.
-         */
+        /// <summary>
+        /// The unique, human-readable name of this scheme.
+        /// </summary>
         public readonly String name;
+
+        /// <summary>
+        /// The set of all supported schemes.
+        /// </summary>
+        /// <returns></returns>
+        public static ISet<KeyScheme> Schemes
+        {
+            get
+            {
+                return _schemes;
+            }            
+        }
 
         public KeyScheme(int id, SecureHash keyHash, bool producer, bool consumer)
         {
-            this.id = id;
-            this.producer = producer;
-            this.consumer = consumer;
-            this.keyHash = keyHash;
-            this.name = createName();
+            this.Id = id;
+            this.Producer = producer;
+            this.Consumer = consumer;
+            this.KeyHash = keyHash;
+            this.name = CreateName();
         }
 
         /**
          * True if the scheme requires dual key sets.
          */
-        public bool isDual()
+        public bool IsDual()
         {
-            return producer && consumer;
+            return Producer && Consumer;
         }
 
         /**
          * Create the public (aka prime) key for a given private (aka raw)
          * key using this scheme's hash.
          */
-        public Key publicKeyFor(Key privateKey)
+        public Key PublicKeyFor(Key privateKey)
         {
-            return new Key(keyHash.Hash(privateKey.data));
+            return new Key(KeyHash.Hash(privateKey.Data));
         }
 
         /**
@@ -136,25 +153,25 @@ namespace Avis.Security
          *         notification from a producer with producerKeys in this
          *         scheme.
          */
-        public bool match(IKeySet producerKeys, IKeySet consumerKeys)
+        public bool Match(IKeySet producerKeys, IKeySet consumerKeys)
         {
-            if (isDual())
+            if (IsDual())
             {
                 DualKeySet keys1 = (DualKeySet)producerKeys;
                 DualKeySet keys2 = (DualKeySet)consumerKeys;
 
-                return matchKeys(keys1.producerKeys, keys2.producerKeys) &&
-                       matchKeys(keys2.consumerKeys, keys1.consumerKeys);
+                return MatchKeys(keys1.ProducerKeys, keys2.ProducerKeys) &&
+                       MatchKeys(keys2.ConsumerKeys, keys1.ConsumerKeys);
 
             }
-            else if (producer)
+            else if (Producer)
             {
-                return matchKeys((SingleKeySet)producerKeys,
+                return MatchKeys((SingleKeySet)producerKeys,
                                   (SingleKeySet)consumerKeys);
             }
             else
             {
-                return matchKeys((SingleKeySet)consumerKeys,
+                return MatchKeys((SingleKeySet)consumerKeys,
                                   (SingleKeySet)producerKeys);
             }
         }
@@ -168,11 +185,11 @@ namespace Avis.Security
          *         version (using this scheme's hash) was in the given
          *         public key set.
          */
-        private bool matchKeys(ISet<Key> privateKeys, ISet<Key> publicKeys)
+        private bool MatchKeys(ISet<Key> privateKeys, ISet<Key> publicKeys)
         {
             foreach (Key privateKey in privateKeys)
             {
-                if (publicKeys.Contains(publicKeyFor(privateKey)))
+                if (publicKeys.Contains(PublicKeyFor(privateKey)))
                     return true;
             }
 
@@ -186,7 +203,7 @@ namespace Avis.Security
 
         public override int GetHashCode()
         {
-            return id;
+            return Id;
         }
 
         public override string ToString()
@@ -194,15 +211,15 @@ namespace Avis.Security
             return name;
         }
 
-        private String createName()
+        private String CreateName()
         {
             StringBuilder str = new StringBuilder();
 
-            str.Append(keyHash.ToString()).Append('-');
+            str.Append(KeyHash.ToString()).Append('-');
 
-            if (isDual())
+            if (IsDual())
                 str.Append("dual");
-            else if (producer)
+            else if (Producer)
                 str.Append("producer");
             else
                 str.Append("consumer");
@@ -215,27 +232,19 @@ namespace Avis.Security
          *
          * @throws IllegalArgumentException if id is not a known scheme ID.
          */
-        public static KeyScheme schemeFor(int id)
+        public static KeyScheme SchemeFor(int id)
         {
             switch (id)
             {
                 case 1:
-                    return SHA1_DUAL;
+                    return Sha1Dual;
                 case 2:
-                    return SHA1_PRODUCER;
+                    return Sha1Producer;
                 case 3:
-                    return SHA1_CONSUMER;
+                    return Sha1Consumer;
                 default:
                     throw new ArgumentException("Invalid key scheme ID: " + id);
             }
-        }
-
-        /**
-         * The set of all supported schemes.
-         */
-        public static ISet<KeyScheme> schemes()
-        {
-            return SCHEMES;
-        }
+        }       
     }
 }

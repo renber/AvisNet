@@ -19,17 +19,19 @@ namespace Avis.Security
 
         bool IsEmpty { get; }
 
-        void add(IKeySet keys);
+        void Add(IKeySet keys);
 
-        void remove(IKeySet keys);
+        void Remove(IKeySet keys);
 
-        bool add(Key key);
+        bool Add(Key key);
 
-        bool remove(Key key);
+        bool Remove(Key key);
 
-        /**
-         * Return this key with the given set removed.
-         */
-        IKeySet subtract(IKeySet keys);
+        /// <summary>
+        /// Return this keyset with the given set removed.
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <returns></returns>
+        IKeySet Subtract(IKeySet keys);
     }
 }

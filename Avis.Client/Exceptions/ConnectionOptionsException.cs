@@ -13,7 +13,9 @@ namespace Avis.Client.Exceptions
     /// </summary>
     public class ConnectionOptionsException : Exception
     {
-        /** The requested options */
+        /// <summary>
+        /// The requested options
+        /// </summary>
         public readonly ConnectionOptions options;
         /** The rejected options and the actual value that the server will use. */
         public readonly Dictionary<String, Object> rejectedOptions;

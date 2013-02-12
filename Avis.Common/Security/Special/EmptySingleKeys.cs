@@ -10,23 +10,23 @@ namespace Avis.Security.Special
      class EmptySingleKeys : SingleKeySet
   {
     
-    public override bool add (Key key)
+    public override bool Add (Key key)
     {
       throw new NotSupportedException ();
     }
 
     
-    public override void add (IKeySet keys)      
+    public override void Add (IKeySet keys)      
     {
       throw new NotSupportedException ();
     }
 
-    public override bool remove (Key key)      
+    public override bool Remove (Key key)      
     {
       return false;
     }
     
-    public override void remove (IKeySet keys)      
+    public override void Remove (IKeySet keys)      
     {
       // zip
     }

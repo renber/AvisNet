@@ -11,11 +11,11 @@ namespace Avis.Security
     /// </summary>
     public sealed class DualKeyScheme : KeyScheme
     {
-        /**
-   * Specifies which of the two subsets of a dual scheme a key is part
-   * of: the producer subset (for sending notifications) or consumer
-   * subset (for receiving notifications).
-   */
+        /// <summary>
+        /// Specifies which of the two subsets of a dual scheme a key is part
+        /// of: the producer subset (for sending notifications) or consumer
+        /// subset (for receiving notifications).
+        /// </summary>
         public enum Subset { Producer, Consumer }
 
         public DualKeyScheme(int id, SecureHash keyHash)

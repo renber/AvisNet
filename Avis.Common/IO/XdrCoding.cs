@@ -32,41 +32,14 @@ namespace Avis.IO
         public const int TYPE_STRING = 4;
         public const int TYPE_OPAQUE = 5;
 
-        private static readonly byte[] EMPTY_BYTES = new byte[0];
+        private static readonly byte[] EmptyBytes = new byte[0];
 
-        /**
-         * Per thread UTF-8 decoder.
-         */
-        /*private static ThreadLocal<CharsetDecoder> UTF8_DECODER = new ThreadLocal<CharsetDecoder> ()
-        {
-          @Override
-          protected CharsetDecoder initialValue ()
-          {
-            return Charset.forName ("UTF-8").newDecoder ();
-          }
-        };*/
-
-        /**
-         * Per thread UTF-8 encoder.
-         */
-        /*
-  private static final ThreadLocal<CharsetEncoder> UTF8_ENCODER =
-    new ThreadLocal<CharsetEncoder> ()
-  {
-    @Override
-    protected CharsetEncoder initialValue ()
-    {
-      return Charset.forName ("UTF-8").newEncoder ();
-    }
-  };*/
-
-
-        public static byte[] toUTF8(String s)
+        public static byte[] ToUTF8(String s)
         {
             try
             {
                 if (s.Length == 0)
-                    return EMPTY_BYTES;
+                    return EmptyBytes;
                 else
                     return Encoding.UTF8.GetBytes(s);
             }
@@ -76,19 +49,16 @@ namespace Avis.IO
                 throw new Exception("Internal error", ex);
             }
         }
-
-        /**
-         * Turn a UTF-8 byte array into a string.
-         * 
-         * @param utf8Bytes The bytes.
-         * @param offset The offset into bytes.
-         * @param length The number of bytes to use.
-         * @return The string.
-         * 
-         * @throws CharacterCodingException if the bytes do not represent a
-         *           UTF-8 string.
-         */
-        public static String fromUTF8(byte[] utf8Bytes, int offset, int length)
+        
+        /// <summary>
+        /// Turn a UTF-8 byte array into a string.
+        /// </summary>
+        /// <param name="utf8Bytes">The bytes.</param>
+        /// <param name="offset">The offset into bytes.</param>
+        /// <param name="length"> The number of bytes to use.</param>
+        /// <returns>The string.</returns>
+        /// <exception cref="DecoderFallbackException">if the bytes do not represent a UTF-8 string.</exception>
+        public static String FromUTF8(byte[] utf8Bytes, int offset, int length)
         {
             if (utf8Bytes.Length == 0)
                 return "";
@@ -96,9 +66,11 @@ namespace Avis.IO
                 return Encoding.UTF8.GetString(utf8Bytes, offset, length);
         }
 
-        /**
-         * Read a length-delimited 4-byte-aligned UTF-8 string.
-         */
+        /// <summary>
+        /// Read a length-delimited 4-byte-aligned UTF-8 string.
+        /// </summary>
+        /// <param name="inStream"></param>
+        /// <returns></returns>
         public static String getString(Stream inStream)
         {
             try
@@ -115,7 +87,7 @@ namespace Avis.IO
                     using (BinReader r = new BinReader(inStream))
                     {
                         byte[] b = r.ReadBytes(length);
-                        s = fromUTF8(b, 0, length);
+                        s = FromUTF8(b, 0, length);
                     }
 
                     inStream.Seek(paddingFor(length), SeekOrigin.Current);
@@ -128,9 +100,11 @@ namespace Avis.IO
             }
         }
 
-        /**
-         * Write a length-delimited 4-byte-aligned UTF-8 string.
-         */
+        /// <summary>
+        /// Write a length-delimited 4-byte-aligned UTF-8 string.
+        /// </summary>
+        /// <param name="outStream"></param>
+        /// <param name="s"></param>
         public static void putString(Stream outStream, String s)
         {
             try
@@ -205,9 +179,11 @@ namespace Avis.IO
             }
         }
 
-        /**
-         * Read a name/value set.
-         */
+        /// <summary>
+        ///  Read a name/value set.
+        /// </summary>
+        /// <param name="inStream"></param>
+        /// <returns></returns>
         public static Dictionary<String, Object> getNameValues(Stream inStream)
         {
             int pairs = getPositiveInt(inStream);
@@ -244,9 +220,11 @@ namespace Avis.IO
             return objects;
         }
 
-        /**
-         * Put an object value in type_id/value format.
-         */
+        /// <summary>
+        /// Put an object value in type_id/value format.
+        /// </summary>
+        /// <param name="outStream"></param>
+        /// <param name="value"></param>
         public static void putObject(Stream outStream, Object value)
         {
             using (BinWriter w = new BinWriter(outStream))
@@ -288,9 +266,11 @@ namespace Avis.IO
             }
         }
 
-        /**
-         * Read an object in type_id/value format.
-         */
+        /// <summary>
+        /// Read an object in type_id/value format.
+        /// </summary>
+        /// <param name="inStream"></param>
+        /// <returns></returns>
         public static Object getObject(Stream inStream)
         {
             using (BinReader r = new BinReader(inStream))
@@ -315,9 +295,11 @@ namespace Avis.IO
             }
         }
 
-        /**
-         * Write a length-delimited, 4-byte-aligned byte array.
-         */
+        /// <summary>
+        /// Write a length-delimited, 4-byte-aligned byte array.
+        /// </summary>
+        /// <param name="outStream"></param>
+        /// <param name="bytes"></param>
         public static void putBytes(Stream outStream, byte[] bytes)
         {
             using (BinWriter w = new BinWriter(outStream))
@@ -328,19 +310,22 @@ namespace Avis.IO
             putPadding(outStream, bytes.Length);
         }
 
-        /**
-         * Read a length-delimited, 4-byte-aligned byte array.
-         * 
-         * @throws ProtocolCodecException 
-         */
+        /// <summary>
+        /// Read a length-delimited, 4-byte-aligned byte array.
+        /// </summary>
+        /// <param name="inStream"></param>
+        /// <returns></returns>
         public static byte[] getBytes(Stream inStream)
         {
             return getBytes(inStream, getPositiveInt(inStream));
         }
 
-        /**
-         * Read a length-delimited, 4-byte-aligned byte array with a given length.
-         */
+        /// <summary>
+        /// Read a length-delimited, 4-byte-aligned byte array with a given length.
+        /// </summary>
+        /// <param name="inStream"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
         public static byte[] getBytes(Stream inStream, int length)
         {
             byte[] bytes = new byte[length];
@@ -374,9 +359,11 @@ namespace Avis.IO
             }
         }
 
-        /**
-         * Read a length-demlimited array of longs.
-         */
+        /// <summary>
+        /// Read a length-demlimited array of longs.
+        /// </summary>
+        /// <param name="inStream"></param>
+        /// <returns></returns>
         public static long[] getLongArray(Stream inStream)
         {
             long[] longs = new long[getPositiveInt(inStream)];
@@ -390,9 +377,11 @@ namespace Avis.IO
             return longs;
         }
 
-        /**
-         * Write a length-delimted array of longs.
-         */
+        /// <summary>
+        /// Write a length-delimted array of longs.
+        /// </summary>
+        /// <param name="outStream"></param>
+        /// <param name="longs"></param>
         public static void putLongArray(Stream outStream, long[] longs)
         {
             using (BinWriter w = new BinWriter(outStream))
@@ -404,9 +393,11 @@ namespace Avis.IO
             }
         }
 
-        /**
-         * Read a length-demlimited array of strings.
-         */
+        /// <summary>
+        /// Read a length-demlimited array of strings.
+        /// </summary>
+        /// <param name="inStream"></param>
+        /// <returns></returns>
         public static String[] getStringArray(Stream inStream)
         {
             String[] strings = new String[getPositiveInt(inStream)];
@@ -417,9 +408,11 @@ namespace Avis.IO
             return strings;
         }
 
-        /**
-         * Write a length-delimted array of strings.
-         */
+        /// <summary>
+        /// Write a length-delimted array of strings.
+        /// </summary>
+        /// <param name="outStream"></param>
+        /// <param name="strings"></param>
         public static void putStringArray(Stream outStream, String[] strings)
         {
             using (BinWriter w = new BinWriter(outStream))
@@ -431,9 +424,11 @@ namespace Avis.IO
                 putString(outStream, s);
         }
 
-        /**
-         * Read an int >= 0 or generate an exception.
-         */
+        /// <summary>
+        /// Read an int >= 0 or generate an exception.
+        /// </summary>
+        /// <param name="inStream"></param>
+        /// <returns></returns>
         private static int getPositiveInt(Stream inStream)
         {
             using (BinReader r = new BinReader(inStream))

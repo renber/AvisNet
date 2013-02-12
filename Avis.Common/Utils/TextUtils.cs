@@ -13,7 +13,7 @@ namespace Avis.Utils
     /// </summary>
     public static class TextUtils
     {
-        private static readonly char [] HEX_TABLE = 
+        private static readonly char [] HexTable = 
             {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 
             'a', 'b', 'c', 'd', 'e', 'f'};
 
@@ -140,8 +140,8 @@ namespace Avis.Utils
         /// <param name="b"></param>
         public static void AppendHex(StringBuilder str, byte b)
         {
-            str.Append(HEX_TABLE[(b >> 4) & 0x0F]);
-            str.Append(HEX_TABLE[(b >> 0) & 0x0F]);
+            str.Append(HexTable[(b >> 4) & 0x0F]);
+            str.Append(HexTable[(b >> 0) & 0x0F]);
         }
 
         /// <summary>
@@ -231,11 +231,11 @@ namespace Avis.Utils
             char firstChar = expr[0];
 
             if (firstChar == '"' || firstChar == '\'')
-                return quotedStringToString(expr);
+                return QuotedStringToString(expr);
             else if (firstChar >= '0' && firstChar <= '9')
-                return stringToNumber(expr);
+                return StringToNumber(expr);
             else if (firstChar == '[')
-                return stringToOpaque(expr);
+                return StringToOpaque(expr);
             else
                 throw new InvalidFormatException("Unrecognised value expression: \"" + expr + "\"");
         }
@@ -245,7 +245,7 @@ namespace Avis.Utils
         /// </summary>
         /// <param name="valueExpr"></param>
         /// <returns></returns>
-        public static Object stringToNumber(String valueExpr)
+        public static Object StringToNumber(String valueExpr)
         {
             try
             {
@@ -269,7 +269,7 @@ namespace Avis.Utils
         /// <param name="valueExpr"></param>
         /// <returns></returns>
         /// <exception cref="InvalidFormatException"></exception>
-        public static String quotedStringToString(String valueExpr)
+        public static String QuotedStringToString(String valueExpr)
         {
             if (valueExpr.Length == 0)
                 throw new InvalidFormatException("Empty string");
@@ -295,7 +295,7 @@ namespace Avis.Utils
         /// <param name="valueExpr"></param>
         /// <returns></returns>
         /// <exception cref="InvalidFormatException"></exception>
-        public static byte[] stringToOpaque(String valueExpr)
+        public static byte[] StringToOpaque(String valueExpr)
         {
             if (valueExpr.Length < 2)
                 throw new InvalidFormatException("Opaque value too short");
@@ -309,7 +309,7 @@ namespace Avis.Utils
             else if (closingBrace != valueExpr.Length - 1)
                 throw new InvalidFormatException("Junk at end of opaque value");
 
-            return hexToBytes(valueExpr.Substring(1, closingBrace));
+            return HexToBytes(valueExpr.Substring(1, closingBrace));
         }
 
         /// <summary>
@@ -320,7 +320,7 @@ namespace Avis.Utils
         /// <param name="?"></param>
         /// <returns></returns>
         /// <exception cref="InvalidFormatException"></exception>
-        public static byte[] hexToBytes(String str)
+        public static byte[] HexToBytes(String str)
         {
             str = str.Replace(" ", ""); // trim whitespace            
 
@@ -330,7 +330,7 @@ namespace Avis.Utils
             byte[] bytes = new byte[str.Length / 2];
 
             for (int i = 0; i < str.Length; i += 2)
-                bytes[i / 2] = hexToByte(str.Substring(i, i + 2));
+                bytes[i / 2] = HexToByte(str.Substring(i, i + 2));
 
             return bytes;
         }
@@ -341,7 +341,7 @@ namespace Avis.Utils
         /// <param name="byteExpr"></param>
         /// <returns></returns>
         /// <exception cref="InvalidFormatException"></exception>
-        public static byte hexToByte(String byteExpr)
+        public static byte HexToByte(String byteExpr)
         {
             if (byteExpr.Length == 0)
             {

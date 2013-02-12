@@ -36,7 +36,7 @@ namespace Avis.IO.Messages
 
         public SubModRqst(long subscriptionId, String subscriptionExpr,
                            bool acceptInsecure)
-            : this(subscriptionId, subscriptionExpr, Keys.EMPTY_KEYS, Keys.EMPTY_KEYS, acceptInsecure)
+            : this(subscriptionId, subscriptionExpr, Keys.EmptyKeys, Keys.EmptyKeys, acceptInsecure)
         {
 
         }
@@ -69,8 +69,8 @@ namespace Avis.IO.Messages
             BinWriter.QuickWrite(outStream, (w) => w.Write(subscriptionId));
             XdrCoding.putString(outStream, subscriptionExpr);
             XdrCoding.putBool(outStream, acceptInsecure);
-            addKeys.encode(outStream);
-            delKeys.encode(outStream);
+            addKeys.Encode(outStream);
+            delKeys.Encode(outStream);
         }
 
         public override void Decode(Stream inStream)
@@ -80,8 +80,8 @@ namespace Avis.IO.Messages
             subscriptionId = BinReader.ReadInt64(inStream);
             subscriptionExpr = XdrCoding.getString(inStream);
             acceptInsecure = XdrCoding.getBool(inStream);
-            addKeys = Keys.decode(inStream);
-            delKeys = Keys.decode(inStream);
+            addKeys = Keys.Decode(inStream);
+            delKeys = Keys.Decode(inStream);
         }
     }
 }

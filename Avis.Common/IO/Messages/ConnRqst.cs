@@ -32,7 +32,7 @@ namespace Avis.IO.Messages
         }
 
         public ConnRqst(int major, int minor)
-            : this(major, minor, EMPTY_OPTIONS, Keys.EMPTY_KEYS, Keys.EMPTY_KEYS)
+            : this(major, minor, EMPTY_OPTIONS, Keys.EmptyKeys, Keys.EmptyKeys)
         {
             
         }
@@ -65,8 +65,8 @@ namespace Avis.IO.Messages
     
             XdrCoding.putNameValues (outStream, options);
 
-            notificationKeys.encode (outStream);
-            subscriptionKeys.encode(outStream);
+            notificationKeys.Encode (outStream);
+            subscriptionKeys.Encode(outStream);
         }
 
         public override void Decode(Stream inStream)
@@ -81,8 +81,8 @@ namespace Avis.IO.Messages
     
             options = XdrCoding.getNameValues (inStream);
     
-            notificationKeys = Keys.decode (inStream);
-            subscriptionKeys = Keys.decode(inStream);
+            notificationKeys = Keys.Decode (inStream);
+            subscriptionKeys = Keys.Decode(inStream);
         }
 
     }

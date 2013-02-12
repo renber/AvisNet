@@ -28,27 +28,27 @@ namespace Avis.Security
 
         }
 
-        public virtual bool add(Key key)
+        public virtual bool Add(Key key)
         {
             return this.Add(key);
         }
 
-        public virtual void add(IKeySet theKeys)
+        public virtual void Add(IKeySet theKeys)
         {
             ((SingleKeySet)theKeys).ToList().ForEach(x => this.Add(x));
         }
 
-        public virtual void remove(IKeySet theKeys)
+        public virtual void Remove(IKeySet theKeys)
         {
             ((SingleKeySet)theKeys).ToList().ForEach(x => this.Remove(x));
         }
 
-        public virtual bool remove(Key key)
+        public virtual bool Remove(Key key)
         {
             return Remove(key);
         }
 
-        public virtual IKeySet subtract(IKeySet keys)
+        public virtual IKeySet Subtract(IKeySet keys)
         {
             return new SingleKeySet(this.Except((SingleKeySet)keys));            
         }

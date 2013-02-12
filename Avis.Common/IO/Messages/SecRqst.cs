@@ -29,7 +29,7 @@ namespace Avis.IO.Messages
 
         public SecRqst()
             // make it easier for client to create and assign keys later
-            : this(Keys.EMPTY_KEYS, Keys.EMPTY_KEYS, Keys.EMPTY_KEYS, Keys.EMPTY_KEYS)
+            : this(Keys.EmptyKeys, Keys.EmptyKeys, Keys.EmptyKeys, Keys.EmptyKeys)
         {
 
         }
@@ -49,20 +49,20 @@ namespace Avis.IO.Messages
         {
             base.Encode(outStream);
 
-            addNtfnKeys.encode(outStream);
-            delNtfnKeys.encode(outStream);
-            addSubKeys.encode(outStream);
-            delSubKeys.encode(outStream);
+            addNtfnKeys.Encode(outStream);
+            delNtfnKeys.Encode(outStream);
+            addSubKeys.Encode(outStream);
+            delSubKeys.Encode(outStream);
         }
 
         public override void Decode(Stream inStream)
         {
             base.Decode(inStream);
 
-            addNtfnKeys = Keys.decode(inStream);
-            delNtfnKeys = Keys.decode(inStream);
-            addSubKeys = Keys.decode(inStream);
-            delSubKeys = Keys.decode(inStream);
+            addNtfnKeys = Keys.Decode(inStream);
+            delNtfnKeys = Keys.Decode(inStream);
+            addSubKeys = Keys.Decode(inStream);
+            delSubKeys = Keys.Decode(inStream);
         }
     }
 }

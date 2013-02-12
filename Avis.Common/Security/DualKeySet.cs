@@ -12,87 +12,86 @@ namespace Avis.Security
     public class DualKeySet : IKeySet
     {
 
-        public readonly HashSet<Key> producerKeys;
-        public readonly HashSet<Key> consumerKeys;
+        public readonly HashSet<Key> ProducerKeys;
+        public readonly HashSet<Key> ConsumerKeys;
 
         public DualKeySet()
         {
-            this.producerKeys = new HashSet<Key>();
-            this.consumerKeys = new HashSet<Key>();
+            this.ProducerKeys = new HashSet<Key>();
+            this.ConsumerKeys = new HashSet<Key>();
         }
 
-        /**
-         * Create an immutable empty instance.
-         * 
-         * @param immutable Used as a flag.
-         */
+        /// <summary>
+        /// Create an immutable empty instance.
+        /// </summary>
+        /// <param name="immutable"></param>
         public DualKeySet(bool immutable)
         {
-            this.producerKeys = new HashSet<Key>();
-            this.consumerKeys = new HashSet<Key>();
+            this.ProducerKeys = new HashSet<Key>();
+            this.ConsumerKeys = new HashSet<Key>();
         }
 
         public DualKeySet(IEnumerable<Key> producerKeys, IEnumerable<Key> consumerKeys)
         {
-            this.producerKeys = new HashSet<Key>(producerKeys);
-            this.consumerKeys = new HashSet<Key>(consumerKeys);
+            this.ProducerKeys = new HashSet<Key>(producerKeys);
+            this.ConsumerKeys = new HashSet<Key>(consumerKeys);
         }
 
-        /**
-         * Get the keys for a producer or consumer.
-         * 
-         * @param subset One of PRODUCER or CONSUMER.
-         */
-        public HashSet<Key> keysFor(DualKeyScheme.Subset subset)
+        /// <summary>
+        /// Get the keys for a producer or consumer.
+        /// </summary>
+        /// <param name="subset"></param>
+        /// <returns></returns>
+        public HashSet<Key> KeysFor(DualKeyScheme.Subset subset)
         {
             if (subset == DualKeyScheme.Subset.Producer)
-                return producerKeys;
+                return ProducerKeys;
             else
-                return consumerKeys;
+                return ConsumerKeys;
         }
 
         public int Count
         {
-            get { return producerKeys.Count + consumerKeys.Count; }
+            get { return ProducerKeys.Count + ConsumerKeys.Count; }
         }
 
         public bool IsEmpty
         {
-            get { return producerKeys.Count == 0 && consumerKeys.Count == 0; }
+            get { return ProducerKeys.Count == 0 && ConsumerKeys.Count == 0; }
         }
 
-        public void add(IKeySet theKeys)
+        public void Add(IKeySet theKeys)
         {
             DualKeySet keys = (DualKeySet)theKeys;
 
-            keys.producerKeys.ToList().ForEach(x => producerKeys.Add(x));
-            keys.consumerKeys.ToList().ForEach(x => consumerKeys.Add(x));
+            keys.ProducerKeys.ToList().ForEach(x => ProducerKeys.Add(x));
+            keys.ConsumerKeys.ToList().ForEach(x => ConsumerKeys.Add(x));
         }
 
-        public void remove(IKeySet theKeys)
+        public void Remove(IKeySet theKeys)
         {
             DualKeySet keys = (DualKeySet)theKeys;
 
-            keys.producerKeys.ToList().ForEach(x => producerKeys.Remove(x));
-            keys.consumerKeys.ToList().ForEach(x => consumerKeys.Remove(x));
+            keys.ProducerKeys.ToList().ForEach(x => ProducerKeys.Remove(x));
+            keys.ConsumerKeys.ToList().ForEach(x => ConsumerKeys.Remove(x));
         }
 
-        public bool add(Key key)
+        public bool Add(Key key)
         {
             throw new NotSupportedException("Cannot add to a dual key set");
         }
 
-        public bool remove(Key key)
+        public bool Remove(Key key)
         {
             throw new NotSupportedException("Cannot remove from a dual key set");
         }
 
-        public IKeySet subtract(IKeySet theKeys)
+        public IKeySet Subtract(IKeySet theKeys)
         {
             DualKeySet keys = (DualKeySet)theKeys;
 
-            return new DualKeySet(producerKeys.Except(keys.producerKeys),
-                                   consumerKeys.Except(keys.consumerKeys));
+            return new DualKeySet(ProducerKeys.Except(keys.ProducerKeys),
+                                   ConsumerKeys.Except(keys.ConsumerKeys));
         }
 
         public override bool Equals(object obj)
@@ -103,15 +102,15 @@ namespace Avis.Security
 
         public bool Equals(DualKeySet keyset)
         {
-            return producerKeys.SequenceEqual(keyset.producerKeys) &&
-                   consumerKeys.SequenceEqual(keyset.consumerKeys);
+            return ProducerKeys.SequenceEqual(keyset.ProducerKeys) &&
+                   ConsumerKeys.SequenceEqual(keyset.ConsumerKeys);
         }
 
         public override int GetHashCode()
         {
             var c = HashSet<Key>.CreateSetComparer();
 
-            return c.GetHashCode(producerKeys) ^ c.GetHashCode(consumerKeys);
+            return c.GetHashCode(ProducerKeys) ^ c.GetHashCode(ConsumerKeys);
         }
     }
 }

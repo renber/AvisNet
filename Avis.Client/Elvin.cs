@@ -155,7 +155,7 @@ namespace Avis.Client
         /// </summary>
         /// <param name="routerUri">A URI for the Elvin router.</param>
         public Elvin(ElvinURI routerUri)
-            : this(routerUri, ConnectionOptions.EMPTY_OPTIONS, Keys.EMPTY_KEYS, Keys.EMPTY_KEYS)
+            : this(routerUri, ConnectionOptions.EMPTY_OPTIONS, Keys.EmptyKeys, Keys.EmptyKeys)
         {
 
         }
@@ -166,7 +166,7 @@ namespace Avis.Client
         /// <param name="routerUri">A URI for the Elvin router.</param>
         /// <param name="options">The connection options.</param>
         public Elvin(ElvinURI routerUri, ConnectionOptions options)
-            : this(routerUri, options, Keys.EMPTY_KEYS, Keys.EMPTY_KEYS)
+            : this(routerUri, options, Keys.EmptyKeys, Keys.EmptyKeys)
         {
 
         }
@@ -481,7 +481,7 @@ namespace Avis.Client
         /// <exception cref="NotConnectedException"></exception>
         public Subscription Subscribe(String subscriptionExpr)
         {
-            return Subscribe(subscriptionExpr, Keys.EMPTY_KEYS, SecureMode.AllowInsecureDelivery);
+            return Subscribe(subscriptionExpr, Keys.EmptyKeys, SecureMode.AllowInsecureDelivery);
         }
 
         /// <summary>
@@ -518,7 +518,7 @@ namespace Avis.Client
         /// <exception cref="NotConnectedException"></exception>
         public Subscription Subscribe(String subscriptionExpr, SecureMode secureMode)
         {
-            return Subscribe(subscriptionExpr, Keys.EMPTY_KEYS, secureMode);
+            return Subscribe(subscriptionExpr, Keys.EmptyKeys, secureMode);
         }
 
         /// <summary>
@@ -580,12 +580,12 @@ namespace Avis.Client
 
         protected void ModifyKeys(Subscription subscription, Keys newKeys)
         {
-            Delta delta = subscription.Keys.deltaFrom(newKeys);
+            Delta delta = subscription.Keys.DeltaFrom(newKeys);
 
             if (!delta.IsEmpty)
             {
                 SendAndReceive
-                  (new SubModRqst(subscription.Id, delta.added, delta.removed,
+                  (new SubModRqst(subscription.Id, delta.Added, delta.Removed,
                                    subscription.AcceptInsecure));
             }
         }
@@ -634,7 +634,7 @@ namespace Avis.Client
         /// <param name="notification"></param>
         public void Send(Notification notification)
         {
-            Send(notification, Keys.EMPTY_KEYS, SecureMode.AllowInsecureDelivery);
+            Send(notification, Keys.EmptyKeys, SecureMode.AllowInsecureDelivery);
         }
 
         /// <summary>
@@ -662,7 +662,7 @@ namespace Avis.Client
         /// <param name="secureMode"></param>
         public void Send (Notification notification, SecureMode secureMode)
         {
-            Send (notification, Keys.EMPTY_KEYS, secureMode);
+            Send (notification, Keys.EmptyKeys, secureMode);
         }
 
         /// <summary>

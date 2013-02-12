@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Avis.Immigrated
 {
+    /// <summary>
+    /// Create a hash code for an array (including its contents)
+    /// </summary>
     public class ArrayHasher
     {
         uint a, b, c;

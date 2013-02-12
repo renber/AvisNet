@@ -29,7 +29,7 @@ namespace Avis.IO.Messages
         }
 
         public NotifyEmit(Dictionary<String, Object> attributes)
-            : this(attributes, true, Keys.EMPTY_KEYS)
+            : this(attributes, true, Keys.EmptyKeys)
         {
 
         }

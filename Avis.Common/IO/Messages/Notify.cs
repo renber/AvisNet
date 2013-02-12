@@ -22,11 +22,11 @@ namespace Avis.IO.Messages
         {
             this.attributes = new Dictionary<string, object>();
             this.deliverInsecure = true;
-            this.keys = Keys.EMPTY_KEYS;
+            this.keys = Keys.EmptyKeys;
         }
 
         protected Notify(params Object[] attributes)
-            : this(asAttributes(attributes), true, Keys.EMPTY_KEYS)
+            : this(asAttributes(attributes), true, Keys.EmptyKeys)
         {
 
         }
@@ -44,14 +44,14 @@ namespace Avis.IO.Messages
         {
             attributes = XdrCoding.getNameValues(inStream);
             deliverInsecure = XdrCoding.getBool(inStream);
-            keys = Keys.decode(inStream);
+            keys = Keys.Decode(inStream);
         }
 
         public override void Encode(Stream outStream)
         {
             XdrCoding.putNameValues(outStream, attributes);
             XdrCoding.putBool(outStream, deliverInsecure);
-            keys.encode(outStream);
+            keys.Encode(outStream);
         }
 
         public static Dictionary<String, Object> asAttributes(params Object[] pairs)

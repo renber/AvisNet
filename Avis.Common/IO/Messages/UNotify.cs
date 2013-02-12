@@ -29,7 +29,7 @@ namespace Avis.IO.Messages
         public UNotify(int clientMajorVersion,
                         int clientMinorVersion,
                         Dictionary<String, Object> attributes)
-            : this(clientMajorVersion, clientMinorVersion, attributes, true, Keys.EMPTY_KEYS)
+            : this(clientMajorVersion, clientMinorVersion, attributes, true, Keys.EmptyKeys)
         {
 
         }

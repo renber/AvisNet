@@ -21,15 +21,25 @@ namespace Avis.Security
  * <p>
  * See also section 7.4 of the client protocol spec.     
  * 
- */
+ */    
+    
+    /// <summary>
+    /// A key collection used to secure notifications. A key collection
+    /// contains zero or more mappings from a key scheme to the keys registered for that scheme.
+    /// Once in use, key collections should be treated as immutable
+    /// i.e. never be modified directly after construction.
+    /// (See also section 7.4 of the client protocol spec.)
+    /// </summary>
     public class Keys
     {
 
-        /** An empty, immutable key collection. */
-        public static readonly Keys EMPTY_KEYS = new EmptyKeys();
+        /// <summary>
+        /// An empty, immutable key collection.
+        /// </summary>
+        public static readonly Keys EmptyKeys = new EmptyKeys();
 
-        private static readonly DualKeySet EMPTY_DUAL_KEYSET = new DualKeySet(true);
-        private static readonly SingleKeySet EMPTY_SINGLE_KEYSET = new EmptySingleKeys();
+        private static readonly DualKeySet EmptyDualKeyset = new DualKeySet(true);
+        private static readonly SingleKeySet EmptySingleKeyset = new EmptySingleKeys();
 
         /**
          * NB: this set must be kept normalised i.e. if there is a key
@@ -47,7 +57,7 @@ namespace Avis.Security
         public Keys(Keys keys)
             : this()
         {
-            add(keys);
+            Add(keys);
         }
 
         /// <summary>
@@ -79,19 +89,16 @@ namespace Avis.Security
             }
         }
 
-
-        /**
-         * Shortcut to efficiently generate a key collection that represents
-         * this key collection's union with another.
-         * 
-         * @param keys The keys to add.
-         * 
-         * @return If keys is empty, this method will simply return this
-         *         collection. If this collection is empty, keys will be
-         *         returned. Otherwise a new collection instance is created
-         *         as the union of both.
-         */
-        public Keys addedTo(Keys keys)
+       /// <summary>
+       /// Shortcut to efficiently generate a key collection that represents
+       /// this key collection's union with another.
+       /// </summary>
+       /// <param name="keys">The keys to add.</param>
+       /// <returns>If keys is empty, this method will simply return this
+       ///        collection. If this collection is empty, keys will be
+       ///         returned. Otherwise a new collection instance is created
+       ///         as the union of both.</returns>
+        public Keys AddedTo(Keys keys)
         {
             if (keys.IsEmpty)
             {
@@ -105,73 +112,59 @@ namespace Avis.Security
             {
                 Keys newKeys = new Keys(this);
 
-                newKeys.add(keys);
+                newKeys.Add(keys);
 
                 return newKeys;
             }
         }
 
-        /**
-         * Add a key for single key scheme.
-         *  
-         * @param scheme The key scheme.
-         * @param key The key to add.
-         * 
-         * @see #remove(SingleKeyScheme, Key)
-         */
-        public virtual void add(SingleKeyScheme scheme, Key key)
+        /// <summary>
+        /// Add a key for single key scheme.
+        /// </summary>
+        /// <param name="scheme">The key scheme.</param>
+        /// <param name="key">The key to add.</param>
+        public virtual void Add(SingleKeyScheme scheme, Key key)
         {
-            newKeysetFor(scheme).add(key);
+            NewKeysetFor(scheme).Add(key);
         }
 
-        /**
-         * Remove a key for single key scheme.
-         *  
-         * @param scheme The key scheme.
-         * @param key The key to remove.
-         * 
-         * @see #add(SingleKeyScheme, Key)
-         */
-        public virtual void remove(SingleKeyScheme scheme, Key key)
+        /// <summary>
+        /// Remove a key for single key scheme.
+        /// </summary>
+        /// <param name="scheme">The key scheme.</param>
+        /// <param name="key">The key to remove.</param>
+        public virtual void Remove(SingleKeyScheme scheme, Key key)
         {
             IKeySet keys;
 
             if (keySets.TryGetValue(scheme, out keys))
             {
-                keys.remove(key);
+                keys.Remove(key);
 
                 if (keys.IsEmpty)
                     keySets.Remove(scheme);
             }
         }
 
-        /**
-         * Add a key for dual key scheme.
-         *  
-         * @param scheme The key scheme.
-         * @param subset The key subset (PRODUCER or CONSUMER) to add the key to. 
-         * @param key The key to add.
-         * 
-         * @see #remove(DualKeyScheme, org.avis.security.DualKeyScheme.Subset, Key)
-         */
-        public virtual void add(DualKeyScheme scheme,
+        /// <summary>
+        /// Add a key for dual key scheme.
+        /// </summary>
+        /// <param name="scheme">The key scheme.</param>
+        /// <param name="subset">The key subset (PRODUCER or CONSUMER) to add the key to. </param>
+        /// <param name="key"> The key to add.</param>
+        public virtual void Add(DualKeyScheme scheme,
                          DualKeyScheme.Subset subset, Key key)
         {
-            newKeysetFor(scheme).keysFor(subset).Add(key);
+            NewKeysetFor(scheme).KeysFor(subset).Add(key);
         }
 
-        /**
-         * Remove a key for dual key scheme.
-         * 
-         * @param scheme The key scheme.
-         * @param subset The key subset (PRODUCER or CONSUMER) to remove the
-         *          key from.
-         * @param key The key to remove.
-         * 
-         * @see #add(DualKeyScheme, org.avis.security.DualKeyScheme.Subset,
-         *      Key)
-         */
-        public virtual void remove(DualKeyScheme scheme,
+        /// <summary>
+        /// Remove a key for dual key scheme.
+        /// </summary>
+        /// <param name="scheme">The key scheme.</param>
+        /// <param name="subset">The key subset (PRODUCER or CONSUMER) to remove the key from.</param>
+        /// <param name="key">The key to remove.</param>
+        public virtual void Remove(DualKeyScheme scheme,
                             DualKeyScheme.Subset subset,
                             Key key)
         {
@@ -179,42 +172,36 @@ namespace Avis.Security
 
             if (keySets.TryGetValue(scheme, out keySet))
             {
-                ((DualKeySet)keySet).keysFor(subset).Remove(key);
+                ((DualKeySet)keySet).KeysFor(subset).Remove(key);
 
                 if (keySet.IsEmpty)
                     keySets.Remove(scheme);
             }
         }
 
-        /**
-         * Add all keys in a collection.
-         * 
-         * @param keys The keys to add.
-         * 
-         * @see #remove(Keys)
-         */
-        public virtual void add(Keys keys)
+        /// <summary>
+        /// Add all keys in a collection.
+        /// </summary>
+        /// <param name="keys">The keys to add.</param>
+        public virtual void Add(Keys keys)
         {
             if (keys == this)
                 throw new ArgumentException("Cannot add key collection to itself");
 
             foreach (KeyScheme scheme in keys.keySets.Keys)
-                add(scheme, keys.keySets[scheme]);
+                Add(scheme, keys.keySets[scheme]);
         }
 
-        private void add(KeyScheme scheme, IKeySet keys)
+        private void Add(KeyScheme scheme, IKeySet keys)
         {
             if (!keys.IsEmpty)
-                newKeysetFor(scheme).add(keys);
+                NewKeysetFor(scheme).Add(keys);
         }
 
-        /**
-         * Remove all keys in a collection.
-         * 
-         * @param keys The keys to remove.
-         * 
-         * @see #add(Keys)
-         */
+        /// <summary>
+        /// Remove all keys in a collection.
+        /// </summary>
+        /// <param name="keys">The keys to remove</param>
         public virtual void remove(Keys keys)
         {
             if (keys == this)
@@ -226,7 +213,7 @@ namespace Avis.Security
 
                 if (keySets.TryGetValue(scheme, out myKeys))
                 {
-                    myKeys.remove(keys.keysetFor(scheme));
+                    myKeys.Remove(keys.KeysetFor(scheme));
 
                     if (myKeys.IsEmpty)
                         keySets.Remove(scheme);
@@ -234,19 +221,15 @@ namespace Avis.Security
             }
         }
 
-        /**
-         * Create a new key collection with some keys added/removed. This
-         * does not modify the current collection.
-         * 
-         * @param toAdd Keys to add.
-         * @param toRemove Keys to remove
-         * 
-         * @return A new key set with keys added/removed. If both add/remove
-         *         key sets are empty, this returns the current instance.
-         *         
-         * @see #deltaFrom(Keys)
-         */
-        public Keys delta(Keys toAdd, Keys toRemove)
+        /// <summary>
+        /// Create a new key collection with some keys added/removed. This
+        /// does not modify the current collection.
+        /// </summary>
+        /// <param name="toAdd">Keys to add.</param>
+        /// <param name="toRemove">Keys to remove</param>
+        /// <returns>A new key set with keys added/removed. If both add/remove
+        /// key sets are empty, this returns the current instance.</returns>
+        public Keys Alter(Keys toAdd, Keys toRemove)
         {
             if (toAdd.IsEmpty && toRemove.IsEmpty)
             {
@@ -256,23 +239,20 @@ namespace Avis.Security
             {
                 Keys keys = new Keys(this);
 
-                keys.add(toAdd);
+                keys.Add(toAdd);
                 keys.remove(toRemove);
 
                 return keys;
             }
         }
 
-        /**
-         * Compute the changes between one key collection and another.
-         * 
-         * @param keys The target key collection.
-         * @return The delta (i.e. key sets to be added and removed)
-         *         required to change this collection into the target.
-         * 
-         * @see #delta(Keys, Keys)
-         */
-        public Delta deltaFrom(Keys keys)
+        /// <summary>
+        /// Compute the changes between one key collection and another.
+        /// </summary>
+        /// <param name="keys">The target key collection.</param>
+        /// <returns>The delta (i.e. key sets to be added and removed)
+        /// required to change this collection into the target.</returns>
+        public Delta DeltaFrom(Keys keys)
         {
             if (keys == this)
                 return Delta.EMPTY_DELTA;
@@ -280,96 +260,83 @@ namespace Avis.Security
             Keys addedKeys = new Keys();
             Keys removedKeys = new Keys();
 
-            foreach (KeyScheme scheme in KeyScheme.schemes())
+            foreach (KeyScheme scheme in KeyScheme.Schemes)
             {
-                IKeySet existingKeyset = keysetFor(scheme);
-                IKeySet otherKeyset = keys.keysetFor(scheme);
+                IKeySet existingKeyset = KeysetFor(scheme);
+                IKeySet otherKeyset = keys.KeysetFor(scheme);
 
-                addedKeys.add(scheme, otherKeyset.subtract(existingKeyset));
-                removedKeys.add(scheme, existingKeyset.subtract(otherKeyset));
+                addedKeys.Add(scheme, otherKeyset.Subtract(existingKeyset));
+                removedKeys.Add(scheme, existingKeyset.Subtract(otherKeyset));
             }
 
             return new Delta(addedKeys, removedKeys);
         }
 
-        /**
-         * Get the key set for a given scheme. This set should not be
-         * modified.
-         * 
-         * @param scheme The scheme.
-         * @return The key set for the scheme. Will be empty if no keys are
-         *         defined for the scheme.
-         * 
-         * @see #keysetFor(DualKeyScheme)
-         * @see #keysetFor(SingleKeyScheme)
-         */
-        private IKeySet keysetFor(KeyScheme scheme)
+        /// <summary>
+        /// Get the key set for a given scheme. This set should not be modified.
+        /// </summary>
+        /// <param name="scheme">The scheme.</param>
+        /// <returns>The key set for the scheme. Will be empty if no keys are
+        ///        defined for the scheme.</returns>
+        private IKeySet KeysetFor(KeyScheme scheme)
         {
             IKeySet keys;
 
             if (!keySets.TryGetValue(scheme, out keys))
-                return scheme.isDual() ? (IKeySet)EMPTY_DUAL_KEYSET : (IKeySet)EMPTY_SINGLE_KEYSET;
+                return scheme.IsDual() ? (IKeySet)EmptyDualKeyset : (IKeySet)EmptySingleKeyset;
             else
                 return keys;
         }
 
-        /**
-         * Get the key set for a dual scheme. This set should not be
-         * modified.
-         * 
-         * @param scheme The scheme.
-         * @return The key set for the scheme. Will be empty if no keys are
-         *         defined for the scheme.
-         * 
-         * @see #keysetFor(KeyScheme)
-         * @see #keysetFor(SingleKeyScheme)
-         */
-        public DualKeySet keysetFor(DualKeyScheme scheme)
+        /// <summary>
+        /// Get the key set for a dual scheme. This set should not be modified.
+        /// </summary>
+        /// <param name="scheme">The scheme.</param>
+        /// <returns>The key set for the scheme. Will be empty if no keys are defined for the scheme.</returns>
+        public DualKeySet KeysetFor(DualKeyScheme scheme)
         {
             IKeySet keys;
 
             if (!keySets.TryGetValue(scheme, out keys))
-                return EMPTY_DUAL_KEYSET;
+                return EmptyDualKeyset;
             else
                 return (DualKeySet)keys;
         }
 
-        /**
-         * Get the key set for a single scheme. This set should not be
-         * modified.
-         * 
-         * @param scheme The scheme.
-         * @return The key set for the scheme. Will be empty if no keys are
-         *         defined for the scheme.
-         *         
-         * @see #keysetFor(KeyScheme)
-         * @see #keysetFor(DualKeyScheme)
-         */
-        public SingleKeySet keysetFor(SingleKeyScheme scheme)
+        /// <summary>
+        /// Get the key set for a single scheme. This set should not be modified.
+        /// </summary>
+        /// <param name="scheme">The scheme.</param>
+        /// <returns>The key set for the scheme. Will be empty if no keys are defined for the scheme.</returns>
+        public SingleKeySet KeysetFor(SingleKeyScheme scheme)
         {            
             IKeySet keys;
 
             if (!keySets.TryGetValue(scheme, out keys))
-                return EMPTY_SINGLE_KEYSET;
+                return EmptySingleKeyset;
             else
                 return (SingleKeySet)keys;
         }
 
-        /**
-         * Lookup/create a key set for a scheme.
-         */
-        private IKeySet newKeysetFor(KeyScheme scheme)
+        /// <summary>
+        /// Lookup/create a key set for a scheme.
+        /// </summary>
+        /// <param name="scheme"></param>
+        /// <returns></returns>
+        private IKeySet NewKeysetFor(KeyScheme scheme)
         {
-            if (scheme.isDual())
-                return newKeysetFor((DualKeyScheme)scheme);
+            if (scheme.IsDual())
+                return NewKeysetFor((DualKeyScheme)scheme);
             else
-                return newKeysetFor((SingleKeyScheme)scheme);
+                return NewKeysetFor((SingleKeyScheme)scheme);
         }
 
-        /**
-         * Lookup/create a key set for a single key scheme.
-         */
-        private SingleKeySet newKeysetFor(SingleKeyScheme scheme)
+        /// <summary>
+        /// Lookup/create a key set for a single key scheme.
+        /// </summary>
+        /// <param name="scheme"></param>
+        /// <returns></returns>
+        private SingleKeySet NewKeysetFor(SingleKeyScheme scheme)
         {
             IKeySet keys;
 
@@ -383,10 +350,12 @@ namespace Avis.Security
             return (SingleKeySet)keys;
         }
 
-        /**
-         * Lookup/create a key set for a single key scheme.
-         */
-        private DualKeySet newKeysetFor(DualKeyScheme scheme)
+        /// <summary>
+        /// Lookup/create a key set for a single key scheme.
+        /// </summary>
+        /// <param name="scheme"></param>
+        /// <returns></returns>
+        private DualKeySet NewKeysetFor(DualKeyScheme scheme)
         {
             IKeySet keys;
 
@@ -400,17 +369,15 @@ namespace Avis.Security
             return (DualKeySet)keys;
         }
 
-        /**
-         * Test whether a given key collection matches this one for the
-         * purpose of notification delivery.
-         * 
-         * @param producerKeys The producer keys to match against this
-         *          (consumer) key collection.
-         * @return True if a consumer using this key collection could
-         *         receive a notification from a producer with the given
-         *         producer key collection.
-         */
-        public bool match(Keys producerKeys)
+        /// <summary>
+        /// Test whether a given key collection matches this one for the
+        /// purpose of notification delivery.
+        /// </summary>
+        /// <param name="producerKeys">The producer keys to match against this (consumer) key collection.</param>
+        /// <returns>True if a consumer using this key collection could
+        /// receive a notification from a producer with the given
+        /// producer key collection.</returns>
+        public bool Match(Keys producerKeys)
         {
             if (IsEmpty || producerKeys.IsEmpty)
                 return false;
@@ -421,7 +388,7 @@ namespace Avis.Security
                 IKeySet keyset = entry.Value;
 
                 if (keySets.ContainsKey(scheme) &&
-                    scheme.match(keyset, keySets[scheme]))
+                    scheme.Match(keyset, keySets[scheme]))
                 {
                     return true;
                 }
@@ -430,7 +397,7 @@ namespace Avis.Security
             return false;
         }
 
-        public void encode(Stream outStream)
+        public void Encode(Stream outStream)
         {
             // number of key schemes in the list
             using (BinWriter w = new BinWriter(outStream))
@@ -446,11 +413,11 @@ namespace Avis.Security
                 // scheme ID
                 using (BinWriter w = new BinWriter(outStream))
                 {
-                    w.Write(scheme.id);
+                    w.Write(scheme.Id);
                 }
 
 
-                if (scheme.isDual())
+                if (scheme.IsDual())
                 {
                     DualKeySet dualKeySet = (DualKeySet)keySet;
 
@@ -459,8 +426,8 @@ namespace Avis.Security
                         w.Write(2);
                     }
 
-                    encodeKeys(outStream, dualKeySet.producerKeys);
-                    encodeKeys(outStream, dualKeySet.consumerKeys);
+                    EncodeKeys(outStream, dualKeySet.ProducerKeys);
+                    EncodeKeys(outStream, dualKeySet.ConsumerKeys);
                 }
                 else
                 {
@@ -469,12 +436,12 @@ namespace Avis.Security
                         w.Write(1);
                     }
 
-                    encodeKeys(outStream, (SingleKeySet)keySet);
+                    EncodeKeys(outStream, (SingleKeySet)keySet);
                 }
             }
         }
 
-        public static Keys decode(Stream inStream)
+        public static Keys Decode(Stream inStream)
         {
             int length;
 
@@ -484,7 +451,7 @@ namespace Avis.Security
             }
 
             if (length == 0)
-                return EMPTY_KEYS;
+                return EmptyKeys;
 
             try
             {
@@ -494,18 +461,18 @@ namespace Avis.Security
                 {
                     using (BinReader r = new BinReader(inStream))
                     {
-                        KeyScheme scheme = KeyScheme.schemeFor(r.ReadInt32());
+                        KeyScheme scheme = KeyScheme.SchemeFor(r.ReadInt32());
                         int keySetCount = r.ReadInt32();
 
-                        if (scheme.isDual())
+                        if (scheme.IsDual())
                         {
                             if (keySetCount != 2)
                                 throw new ProtocolCodecException("Dual key scheme with " + keySetCount + " key sets");
 
-                            DualKeySet keyset = keys.newKeysetFor((DualKeyScheme)scheme);
+                            DualKeySet keyset = keys.NewKeysetFor((DualKeyScheme)scheme);
 
-                            decodeKeys(inStream, keyset.producerKeys);
-                            decodeKeys(inStream, keyset.consumerKeys);
+                            DecodeKeys(inStream, keyset.ProducerKeys);
+                            DecodeKeys(inStream, keyset.ConsumerKeys);
                         }
                         else
                         {
@@ -513,7 +480,7 @@ namespace Avis.Security
                                 throw new ProtocolCodecException
                                   ("Single key scheme with " + keySetCount + " key sets");
 
-                            decodeKeys(inStream, keys.newKeysetFor((SingleKeyScheme)scheme));
+                            DecodeKeys(inStream, keys.NewKeysetFor((SingleKeyScheme)scheme));
                         }
                     }
                 }
@@ -527,7 +494,7 @@ namespace Avis.Security
             }
         }
 
-        private static void encodeKeys(Stream outStream, ISet<Key> keys)
+        private static void EncodeKeys(Stream outStream, ISet<Key> keys)
         {
             using (BinWriter w = new BinWriter(outStream))
             {
@@ -535,10 +502,10 @@ namespace Avis.Security
             }
 
             foreach (Key key in keys)
-                XdrCoding.putBytes(outStream, key.data);
+                XdrCoding.putBytes(outStream, key.Data);
         }
 
-        private static void decodeKeys(Stream inStream, ISet<Key> keys)
+        private static void DecodeKeys(Stream inStream, ISet<Key> keys)
         {
             int len;
             using (BinReader r = new BinReader(inStream))
@@ -562,7 +529,7 @@ namespace Avis.Security
 
             foreach (KeyScheme scheme in keys.keySets.Keys)
             {
-                if (!keysetFor(scheme).Equals(keys.keysetFor(scheme)))
+                if (!KeysetFor(scheme).Equals(keys.KeysetFor(scheme)))
                     return false;
             }
 
@@ -575,7 +542,7 @@ namespace Avis.Security
             int hash = 0;
 
             foreach (KeyScheme scheme in keySets.Keys)
-                hash ^= 1 << scheme.id;
+                hash ^= 1 << scheme.Id;
 
             return hash;
         }

@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace Avis.Immigrated
 {
     /// <summary>
-    /// A binary reader which uses UTF-8 and leaves the stream open after its disposal
-    /// and uses Big Endian
+    /// A binary reader which uses UTF-8, leaves the stream open after its disposal
+    /// and uses Big Endian Encoding
     /// </summary>
     public class BinReader : EndianBinaryReader
     {
